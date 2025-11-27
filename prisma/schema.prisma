@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+generator client {
+  provider = "prisma-client-js"
+}
+
+model users {
+  id Int @id @default(autoincrement())
+  username String?
+  full_name String
+  email String @unique
+  password String
+  photo_profile String?
+  bio String?
+  created_at DateTime @default(now())
+  // created_by Int
+  updated_at DateTime @default(now())
+  // updated_by Int
+  thread_create threads[] @relation("thread_create")
+  thread_update threads[] @relation("thread_update")
+
+  replies_create replies[] @relation("replies_create")
+  replies_update replies[] @relation("replies_update")
+
+  likes_create likes[] @relation("likes_create")
+  likes_update likes[] @relation("likes_update")
+
+  following following[] @relation("FollowingToFollower")
+  followers following[] @relation("FollowerToFollowing")
+}
+
+model replies {
+  id  Int @id @default(autoincrement())
+  user_id Int
+  image String?
+  content String
+
+  created_at DateTime @default(now())
+  created_by Int
+  created users @relation("replies_create",fields: [created_by], references: [id])
+
+  updated_at DateTime @default(now())
+  updated_by Int?
+  updated users? @relation("replies_update",fields: [updated_by], references: [id])
+
+  thread_id Int?
+  thread threads? @relation(fields: [thread_id], references: [id])
+
+  parents replies[] @relation("replytoreply")
+  childrens replies[] @relation("replytoreply")
+
+  likes likes[]
+}
+
+model threads {
+  id  Int @id @default(autoincrement())
+  content String
+  image String?
+  media_type String?
+  number_of_replies Int?
+
+  created_at DateTime @default(now())
+  created_by Int
+  created users @relation("thread_create",fields: [created_by], references: [id])
+
+  updated_at DateTime @default(now())
+  updated_by Int?
+  updated users? @relation("thread_update",fields: [updated_by], references: [id])
+
+  replies replies[]
+  likes likes[]
+}
+
+model likes {
+  id  Int @id @default(autoincrement())
+  user_id Int
+
+  thread_id Int?
+  thread threads? @relation(fields: [thread_id], references: [id])
+
+  reply_id Int?
+  reply replies? @relation(fields: [reply_id], references: [id])
+
+  created_at DateTime @default(now())
+  created_by Int
+  created users @relation("likes_create",fields: [created_by], references: [id])
+
+  updated_at DateTime @default(now())
+  updated_by Int?
+  updated users?  @relation("likes_update",fields: [updated_by], references: [id])
+}
+
+model following {
+  id  Int @id @default(autoincrement())
+  following_id Int
+  following users @relation("FollowerToFollowing" , fields: [following_id], references: [id])
+
+  follower_id Int
+  follower users @relation("FollowingToFollower" , fields: [follower_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
