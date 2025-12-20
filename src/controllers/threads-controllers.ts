@@ -226,33 +226,6 @@ export const createThread = async (
   }
 };
 
-/**
- * @swagger
- * /thread/multi:
- *   post:
- *     summary: Membuat thread dengan multiple images.
- *     tags: [Threads]
- *     security:
- *       - BearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               content:
- *                 type: string
- *               image:
- *                 type: array
- *                 items:
- *                   type: string
- *                   format: binary
- *     responses:
- *       200:
- *         description: Thread berhasil diposting.
- */
-
 export const createThreadMulti = async (
   req: Request,
   res: Response,
