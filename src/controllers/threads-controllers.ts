@@ -2,49 +2,11 @@ import { NextFunction, Response, Request } from "express";
 import { prisma } from "../utils/prisma";
 import { createThreadValidation } from "../models/threads-models";
 import cloudinary from "../utils/cloudinary";
-// import { getio } from "../app";
+import { getio } from "../app";
 import pLimit from "p-limit";
 
 const limit = pLimit(10);
 // import redisClient from "../utils/redis";
-
-/**
- * @swagger
- * tags:
- * name: Threads
- * description: Operasi untuk manajemen Thread/Post
- */
-
-/**
- * @swagger
- * /thread:
- *   get:
- *     summary: Mendapatkan daftar semua thread.
- *     tags: [Threads]
- *     description: Mengambil semua thread dari database atau Redis cache.
- *     responses:
- *       200:
- *         description: Data thread berhasil diambil.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 message:
- *                   type: string
- *                   example: "Get Data Thread Successfully from DB"
- *                 data:
- *                   $ref: "#/components/schemas/ThreadListResponse"
- *       500:
- *         description: Error Server.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
- */
 
 export const getThreads = async (
   req: Request,
@@ -134,35 +96,6 @@ export const getThreads = async (
   }
 };
 
-/**
- * @swagger
- * /thread/{id}:
- *   get:
- *     summary: Mendapatkan thread berdasarkan ID.
- *     tags: [Threads]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID dari thread.
- *     responses:
- *       200:
- *         description: Thread ditemukan.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ThreadResponse"
- *       404:
- *         description: Thread tidak ditemukan.
- *       500:
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
- */
-
 export const getThreadById = async (
   req: Request,
   res: Response,
@@ -215,33 +148,6 @@ export const getThreadById = async (
     next(error);
   }
 };
-
-/**
- * @swagger
- * /thread:
- *   post:
- *     summary: Membuat thread baru (single image/video).
- *     tags: [Threads]
- *     security:
- *       - BearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               content:
- *                 type: string
- *               image:
- *                 type: string
- *                 format: binary
- *     responses:
- *       200:
- *         description: Thread berhasil diposting.
- *       401:
- *         description: Unauthorized.
- */
 
 export const createThread = async (
   req: Request,
@@ -302,12 +208,12 @@ export const createThread = async (
 
     // await redisClient.del("threads");
 
-    // const io = getio();
+    const io = getio();
 
-    // io.emit("new_thread", {
-    //   data: response,
-    //   message: "tew thread",
-    // });
+    io.emit("new_thread", {
+      data: response,
+      message: "tew thread",
+    });
 
     res.status(200).json({
       code: 200,
@@ -415,12 +321,12 @@ export const createThreadMulti = async (
 
     // await redisClient.del("threads");
 
-    // const io = getio();
+    const io = getio();
 
-    // io.emit("new_thread", {
-    //   data: response,
-    //   message: "tew thread",
-    // });
+    io.emit("new_thread", {
+      data: response,
+      message: "tew thread",
+    });
 
     res.status(200).json({
       code: 200,
@@ -432,7 +338,6 @@ export const createThreadMulti = async (
     next(error);
   }
 };
-
 
 export const getThreadByUser = async (
   req: Request,
