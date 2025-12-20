@@ -2,11 +2,11 @@ import { NextFunction, Response, Request } from "express";
 import { prisma } from "../utils/prisma";
 import { createThreadValidation } from "../models/threads-models";
 import cloudinary from "../utils/cloudinary";
-import { getio } from "../app";
+// import { getio } from "../app";
 import pLimit from "p-limit";
 
 const limit = pLimit(10);
-import redisClient from "../utils/redis";
+// import redisClient from "../utils/redis";
 
 /**
  * @swagger
@@ -52,21 +52,20 @@ export const getThreads = async (
   next: NextFunction
 ) => {
   try {
-    const resultredis = await redisClient.get("threads");
     const user_id = (req as any).user?.id;
-
     const userIdForQuery = user_id || -1;
+    // const resultredis = await redisClient.get("threads");
 
-    if (resultredis) {
-      return res.status(200).json({
-        code: 200,
-        status: "success",
-        message: "Get Data Thread Successfully from redis",
-        data: {
-          threads: JSON.parse(resultredis),
-        },
-      });
-    }
+    // if (resultredis) {
+    //   return res.status(200).json({
+    //     code: 200,
+    //     status: "success",
+    //     message: "Get Data Thread Successfully from redis",
+    //     data: {
+    //       threads: JSON.parse(resultredis),
+    //     },
+    //   });
+    // }
 
     const result = await prisma.threads.findMany({
       include: {
@@ -111,16 +110,16 @@ export const getThreads = async (
       islike: r.likes.length > 0,
     }));
 
-    const resultredist = await redisClient.set(
-      "threads",
-      JSON.stringify(response),
-      {
-        EX: 60,
-        NX: true,
-      }
-    );
+    // const resultredist = await redisClient.set(
+    //   "threads",
+    //   JSON.stringify(response),
+    //   {
+    //     EX: 60,
+    //     NX: true,
+    //   }
+    // );
 
-    console.log(resultredist);
+    // console.log(resultredist);
 
     res.status(200).json({
       code: 200,
@@ -301,14 +300,14 @@ export const createThread = async (
       replies: result._count.replies,
     };
 
-    await redisClient.del("threads");
+    // await redisClient.del("threads");
 
-    const io = getio();
+    // const io = getio();
 
-    io.emit("new_thread", {
-      data: response,
-      message: "tew thread",
-    });
+    // io.emit("new_thread", {
+    //   data: response,
+    //   message: "tew thread",
+    // });
 
     res.status(200).json({
       code: 200,
@@ -416,12 +415,12 @@ export const createThreadMulti = async (
 
     // await redisClient.del("threads");
 
-    const io = getio();
+    // const io = getio();
 
-    io.emit("new_thread", {
-      data: response,
-      message: "tew thread",
-    });
+    // io.emit("new_thread", {
+    //   data: response,
+    //   message: "tew thread",
+    // });
 
     res.status(200).json({
       code: 200,
@@ -434,20 +433,6 @@ export const createThreadMulti = async (
   }
 };
 
-/**
- * @swagger
- * /thread/user:
- *   get:
- *     summary: Mendapatkan semua thread user yang login.
- *     tags: [Threads]
- *     security:
- *       - BearerAuth: []
- *     responses:
- *       200:
- *         description: Data thread user berhasil diambil.
- *       401:
- *         description: Unauthorized.
- */
 
 export const getThreadByUser = async (
   req: Request,
