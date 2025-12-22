@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "ts-node-dev src/app.ts",
     "build": "tsc && npx prisma generate",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
