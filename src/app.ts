@@ -37,7 +37,11 @@ let io;
 
 io = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:5173", "http://localhost:3001"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:3001",
+      "https://circle-fe.vercel.app",
+    ],
     credentials: true,
   },
 });
