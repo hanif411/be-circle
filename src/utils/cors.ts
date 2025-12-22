@@ -1,4 +1,4 @@
 export const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "https://circle-fe.vercel.app/",
   credentials: true,
 };
