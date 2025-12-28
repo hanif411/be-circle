@@ -1,5 +1,3 @@
----
-
 ### 2. REPO BACKEND (`be-circle`)
 
 ```markdown
