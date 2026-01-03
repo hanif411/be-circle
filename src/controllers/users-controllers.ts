@@ -88,8 +88,8 @@ export const loginUser = async (
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
 
     res.status(200).json({
@@ -306,7 +306,7 @@ export const getUserByLogin = async (
     };
     res.status(200).json({
       code: 200,
-      message: "succes get user by id",
+      message: "succes get user by login",
       data: response,
     });
   } catch (error) {
