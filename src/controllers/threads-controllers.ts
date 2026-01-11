@@ -6,7 +6,7 @@ import { getio } from "../app";
 import pLimit from "p-limit";
 
 const limit = pLimit(10);
-import redisClient from "../utils/redis";
+// import redisClient from "../utils/redis";
 
 export const getThreads = async (
   req: Request,
@@ -16,7 +16,7 @@ export const getThreads = async (
   try {
     const user_id = (req as any).user?.id;
     const userIdForQuery = user_id || -1;
-    const resultredis = await redisClient.get("threads");
+    // const resultredis = await redisClient.get("threads");
 
     // if (resultredis) {
     //   return res.status(200).json({
@@ -72,14 +72,14 @@ export const getThreads = async (
       islike: r.likes.length > 0,
     }));
 
-    const resultredist = await redisClient.set(
-      "threads",
-      JSON.stringify(response),
-      {
-        EX: 60,
-        NX: true,
-      }
-    );
+    // const resultredist = await redisClient.set(
+    //   "threads",
+    //   JSON.stringify(response),
+    //   {
+    //     EX: 60,
+    //     NX: true,
+    //   }
+    // );
 
     // console.log(resultredist);
 
@@ -206,7 +206,7 @@ export const createThread = async (
       replies: result._count.replies,
     };
 
-    await redisClient.del("threads");
+    // await redisClient.del("threads");
 
     const io = getio();
 
@@ -292,7 +292,7 @@ export const createThreadMulti = async (
       replies: result._count.replies,
     };
 
-    await redisClient.del("threads");
+    // await redisClient.del("threads");
 
     const io = getio();
 
