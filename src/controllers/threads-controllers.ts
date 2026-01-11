@@ -18,16 +18,16 @@ export const getThreads = async (
     const userIdForQuery = user_id || -1;
     const resultredis = await redisClient.get("threads");
 
-    if (resultredis) {
-      return res.status(200).json({
-        code: 200,
-        status: "success",
-        message: "Get Data Thread Successfully from redis",
-        data: {
-          threads: JSON.parse(resultredis),
-        },
-      });
-    }
+    // if (resultredis) {
+    //   return res.status(200).json({
+    //     code: 200,
+    //     status: "success",
+    //     message: "Get Data Thread Successfully from redis",
+    //     data: {
+    //       threads: JSON.parse(resultredis),
+    //     },
+    //   });
+    // }
 
     const result = await prisma.threads.findMany({
       include: {
